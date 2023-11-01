@@ -1,0 +1,29 @@
+version: "3"  # Version du fichier Docker Compose
+
+services:
+  rest:  # Service pour le composant "rest"
+    image: examen-gse-gamix-sr-2122:1  # Utilise l'image spécifiée avec Tag "1"
+    environment:
+      - NODE_ENV=production  # Configure la variable d'environnement NODE_ENV à "production"
+    ports:
+      - "3030:3030"  # Associe le port de l'hôte 3030 au port du conteneur 3030
+    networks:
+      - gamix2122sr  # Connecte au réseau nommé "gamix2122sr"
+    depends_on:
+      - data  # Ce service dépend du service "data"
+
+  data:  # Service pour le composant "data" (MongoDB)
+    image: mongo:5  # Utilise l'image "mongo" avec l'étiquette "5"
+    ports:
+      - "3031:27017"  # Associe le port de l'hôte 3031 au port du conteneur 27017
+    networks:
+      - gamix2122sr  # Connecte au réseau nommé "gamix2122sr"
+    volumes:
+      - db:/data/db  # Montez un volume nommé "db" pour la persistance des données
+
+networks:
+  gamix2122sr:  # Définit le réseau "gamix2122sr"
+    external: true  # Supposons que ce réseau a déjà été créé à l'extérieur
+
+volumes:
+  db:  # Définit un volume nommé "db" pour le stockage des données de MongoDB
